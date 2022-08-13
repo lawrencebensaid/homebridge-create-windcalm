@@ -1,6 +1,18 @@
 # Homebridge CREATE Windcalm
 
+Add your CREATE Windcalm DC ceiling fan to Homebridge.
+
 ## Configuration
+
+**Example config**
+```json
+{
+    "accessory": "CREATEWindcalm",
+    "name": "My Ceiling Fan",
+    "id": "bf********************",
+    "key": "****************",
+}
+```
 
 ## Tuya Device Preparation
 
