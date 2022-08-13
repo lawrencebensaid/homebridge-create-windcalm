@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "displayName": "CREATE Windcalm",
+  "name": "homebridge-create-windcalm",
+  "version": "1.0.0",
+  "description": "Add your CREATE Windcalm DC ceiling fan to Homebridge",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lawrencebensaid/homebridge-create-windcalm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lawrencebensaid/homebridge-create-windcalm/issues"
+  },
+  "engines": {
+    "node": ">=14.18.1",
+    "homebridge": ">=1.3.5"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rimraf ./dist && tsc"
+  },
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "dependencies": {
+    "tuyapi": "^7.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.10.9",
+    "homebridge": "^1.3.5",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.4"
+  }
+}

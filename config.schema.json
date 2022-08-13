@@ -1,0 +1,26 @@
+{
+  "pluginAlias": "CREATEWindcalm",
+  "pluginType": "accessory",
+  "singular": false,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "required": true,
+        "default": "CREATE Windcalm DC Ceiling fan"
+      },
+      "id": {
+        "title": "Device ID",
+        "type": "string",
+        "required": true
+      },
+      "key": {
+        "title": "Local Key",
+        "type": "string",
+        "required": true
+      }
+    }
+  }
+}
