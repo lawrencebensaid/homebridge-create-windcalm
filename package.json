@@ -2,7 +2,7 @@
   "private": true,
   "displayName": "CREATE Windcalm",
   "name": "homebridge-create-windcalm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Add your CREATE Windcalm DC ceiling fan to Homebridge",
   "repository": {
     "type": "git",
