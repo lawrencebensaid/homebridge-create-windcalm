@@ -64,9 +64,6 @@ export class CREATEWindcalm implements AccessoryPlugin {
     this.lightService.getCharacteristic(api.hap.Characteristic.On)
       .onGet(this.fetchLightPower.bind(this))
       .onSet(this.handleLightPower.bind(this));
-    this.lightService.getCharacteristic(api.hap.Characteristic.ColorTemperature)
-      .onGet(this.fetchLightTemperature.bind(this))
-      .onSet(this.handleLightTemperature.bind(this));
 
 
     // Information service
@@ -80,7 +77,7 @@ export class CREATEWindcalm implements AccessoryPlugin {
   }
 
   async fetchFanOn(): Promise<boolean> {
-    if (!this.connected) throw Error('Not connected');
+    if (!this.connected) new Promise((_, f) => { f(Error('Not connected')); });
     const state = await this._getDataPoint(60) as boolean
     return state;
   }
@@ -90,7 +87,7 @@ export class CREATEWindcalm implements AccessoryPlugin {
   }
 
   async fetchFanSpeed(): Promise<number> {
-    if (!this.connected) throw Error('Not connected');
+    if (!this.connected) new Promise((_, f) => { f(Error('Not connected')); });
     return 100 / 6 * (await this._getDataPoint(62) as number);
   }
 
@@ -110,23 +107,12 @@ export class CREATEWindcalm implements AccessoryPlugin {
   }
 
   async fetchLightPower(): Promise<boolean> {
-    if (!this.connected) throw Error('Not connected');
+    if (!this.connected) new Promise((_, f) => { f(Error('Not connected')); });
     return await this._getDataPoint(20) as boolean;
   }
 
   async handleLightPower(value: CharacteristicValue) {
     await this._setDataPoint(20, value.valueOf() as boolean);
-  }
-
-  async handleLightTemperature(value: CharacteristicValue) {
-    await this._setDataPoint(23, this._convertRange(value.valueOf() as number, [140, 500], [30, 1000]));
-  }
-
-  async fetchLightTemperature(): Promise<number> {
-    if (!this.connected) throw Error('Not connected');
-    var value = await this._getDataPoint(23) as number;
-    if (value < 30) value = 30; // NOTE: There is a bug in the Windcalm DC's firmware causing 30 to be equal to 0, but unfortunately it can still be set to the value 0.
-    return this._convertRange(value, [30, 1000], [140, 500]);
   }
 
   async _getDataPoint(index: number): Promise<any> {
