@@ -25,22 +25,27 @@ export class CREATEWindcalm implements AccessoryPlugin {
 
     this.device = new TuyAPI({
       id: config.id,
-      key: config.key
+      key: config.key,
+      ip: config.ip
     });
-    this.device.find().then(() => {
-      log.debug(`Found '${this.config.name}'`);
-      this.device.connect();
-    });
+    this.device.find()
+      .then(() => {
+        log.info(`Found '${this.config.name}'`);
+        this.device.connect();
+      })
+      .catch(reason => {
+        log.error(reason);
+      });
     this.device.on('connected', () => {
       this.connected = true;
       log.info(`Connected to '${this.config.name}'`);
     });
     this.device.on('disconnected', () => {
       this.connected = false;
-      log.debug(`Disconnected from '${this.config.name}'`);
+      log.info(`Disconnected from '${this.config.name}'`);
     });
     this.device.on('error', error => {
-      log.error(`Error from '${this.config.name}':`, error);
+      log.debug(error.message);
     });
 
 
@@ -76,8 +81,8 @@ export class CREATEWindcalm implements AccessoryPlugin {
 
   }
 
-  async fetchFanOn(): Promise<boolean> {
-    if (!this.connected) new Promise((_, f) => { f(Error('Not connected')); });
+  async fetchFanOn(): Promise<boolean | null> {
+    if (!this.connected) return null;
     const state = await this._getDataPoint(60) as boolean
     return state;
   }
@@ -86,8 +91,8 @@ export class CREATEWindcalm implements AccessoryPlugin {
     await this._setDataPoint(60, value.valueOf() as boolean);
   }
 
-  async fetchFanSpeed(): Promise<number> {
-    if (!this.connected) new Promise((_, f) => { f(Error('Not connected')); });
+  async fetchFanSpeed(): Promise<number | null> {
+    if (!this.connected) return null;
     return 100 / 6 * (await this._getDataPoint(62) as number);
   }
 
@@ -97,8 +102,8 @@ export class CREATEWindcalm implements AccessoryPlugin {
     await this._setDataPoint(62, speed);
   }
 
-  async fetchFanDirection(): Promise<number> {
-    if (!this.connected) throw Error('Not connected');
+  async fetchFanDirection(): Promise<number | null> {
+    if (!this.connected) return null;
     return (await this._getDataPoint(63) as string) == 'forward' ? this.api.hap.Characteristic.RotationDirection.CLOCKWISE : this.api.hap.Characteristic.RotationDirection.COUNTER_CLOCKWISE;
   }
 
@@ -106,8 +111,8 @@ export class CREATEWindcalm implements AccessoryPlugin {
     await this._setDataPoint(63, (value.valueOf() as number) == this.api.hap.Characteristic.RotationDirection.COUNTER_CLOCKWISE ? 'forward' : 'reverse');
   }
 
-  async fetchLightPower(): Promise<boolean> {
-    if (!this.connected) new Promise((_, f) => { f(Error('Not connected')); });
+  async fetchLightPower(): Promise<boolean | null> {
+    if (!this.connected) return null;
     return await this._getDataPoint(20) as boolean;
   }
 
@@ -171,7 +176,7 @@ export class CREATEWindcalm implements AccessoryPlugin {
     });
   }
 
-  _convertRange(value, r1, r2) { 
+  _convertRange(value, r1, r2) {
     return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
   }
 
